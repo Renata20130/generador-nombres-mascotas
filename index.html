@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Generador de Nombres para Mascotas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gradient-to-br from-pink-100 to-blue-100 min-h-screen flex flex-col items-center justify-center font-sans">
+
+  <div class="bg-white shadow-lg rounded-2xl p-8 w-96 text-center">
+    <h1 class="text-2xl font-bold text-gray-800 mb-6">🐾 Generador de Nombres para Mascotas</h1>
+
+    <div class="space-y-4">
+      <div>
+        <label class="block font-semibold text-gray-700">Especie</label>
+        <select id="especie" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-pink-400">
+          <option value="perro">Perro 🐶</option>
+          <option value="gato">Gato 🐱</option>
+          <option value="conejo">Conejo 🐰</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="block font-semibold text-gray-700">Género</label>
+        <select id="genero" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-pink-400">
+          <option value="macho">Macho ♂️</option>
+          <option value="hembra">Hembra ♀️</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="block font-semibold text-gray-700">Tamaño</label>
+        <select id="tamano" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-pink-400">
+          <option value="pequeño">Pequeño 🐾</option>
+          <option value="mediano">Mediano 🦴</option>
+          <option value="grande">Grande 🐕</option>
+        </select>
+      </div>
+
+      <button id="generar" class="w-full bg-pink-500 text-white py-2 rounded-lg mt-4 hover:bg-pink-600 hover:scale-105 transition transform">
+        Generar nombre
+      </button>
+
+
+      <div id="resultado" class="text-xl font-semibold text-gray-800 mt-6 opacity-0 translate-y-4"></div>
+
+    </div>
+  </div>
+
+  <footer class="mt-6 text-sm text-gray-600">
+    Hecho con 💕 por TinyRen
+  </footer>
+
+  <script>
+  const nombres = {
+    perro: {
+      macho: ["Rocky", "Toby", "Max", "Bruno", "Coco", "Simón"],
+      hembra: ["Luna", "Nina", "Kira", "Moka", "Lola", "Canela"]
+    },
+    gato: {
+      macho: ["Tom", "Simba", "Milo", "Leo", "Felix", "Chester"],
+      hembra: ["Nala", "Misha", "Cleo", "Sasha", "Luli", "Mimi"]
+    },
+    conejo: {
+      macho: ["Bugs", "Copito", "Fluffy", "Snow", "Pelusa"],
+      hembra: ["Daisy", "Clover", "Miel", "Luna", "Poppy"]
+    }
+  };
+
+  const especieSelect = document.getElementById("especie");
+  const generoSelect = document.getElementById("genero");
+  const tamanoSelect = document.getElementById("tamano");
+  const resultado = document.getElementById("resultado");
+  const boton = document.getElementById("generar");
+
+  boton.addEventListener("click", () => {
+    const especie = especieSelect.value;
+    const genero = generoSelect.value;
+    const tamano = tamanoSelect.value;
+
+    const lista = nombres[especie][genero];
+    const nombre = lista[Math.floor(Math.random() * lista.length)];
+
+    // Agregar animación de aparición
+    resultado.classList.remove("opacity-0", "translate-y-4");
+    resultado.innerHTML = `✨ Tu ${especie} ${tamano} podría llamarse <span class="text-pink-600 font-bold">${nombre}</span> 💖`;
+    resultado.classList.add("opacity-0", "translate-y-4"); // Reinicia animación
+
+    setTimeout(() => {
+      resultado.classList.remove("opacity-0", "translate-y-4");
+      resultado.classList.add("transition-all", "duration-500", "opacity-100", "translate-y-0");
+    }, 50);
+  });
+</script>
+
+
+</body>
+</html>
