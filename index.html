@@ -1,100 +1,189 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Generador de Nombres para Mascotas</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generador de Nombres para Mascotas</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
 </head>
+<body id="body" class="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-200 to-purple-300 transition-all duration-500">
+  <div id="card" class="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md text-center transition-all duration-500 relative">
 
-<body class="bg-gradient-to-br from-pink-100 to-blue-100 min-h-screen flex flex-col items-center justify-center font-sans">
+    <!-- Título + botón modo -->
+    <div class="flex justify-between items-center mb-4">
+      <h1 class="text-2xl font-bold text-dynamic text-gray-800">🐾 Generador de Nombres para Mascotas 🐾</h1>
+      <button id="toggleDark" class="p-2 rounded-full bg-white hover:bg-gray-200 transition flex items-center justify-center">
+        <i id="iconLuna" data-lucide="moon" class="w-6 h-6 text-black block"></i>
+        <i id="iconSol" data-lucide="sun" class="w-6 h-6 text-yellow-400 hidden"></i>
+      </button>
+    </div>
 
-  <div class="bg-white shadow-lg rounded-2xl p-8 w-96 text-center">
-    <h1 class="text-2xl font-bold text-gray-800 mb-6">🐾 Generador de Nombres para Mascotas</h1>
-
+    <!-- Formulario -->
     <div class="space-y-4">
       <div>
-        <label class="block font-semibold text-gray-700">Especie</label>
-        <select id="especie" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-pink-400">
-          <option value="perro">Perro 🐶</option>
-          <option value="gato">Gato 🐱</option>
-          <option value="conejo">Conejo 🐰</option>
+        <label for="especie" class="text-dynamic text-gray-800">Especie</label>
+        <select id="especie" class="border rounded-md p-2 w-full text-card text-gray-800">
+          <option value="perro">Perro</option>
+          <option value="gato">Gato</option>
+          <option value="conejo">Conejo</option>
         </select>
       </div>
 
       <div>
-        <label class="block font-semibold text-gray-700">Género</label>
-        <select id="genero" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-pink-400">
-          <option value="macho">Macho ♂️</option>
-          <option value="hembra">Hembra ♀️</option>
+        <label for="genero" class="text-dynamic text-gray-800">Género</label>
+        <select id="genero" class="border rounded-md p-2 w-full text-card text-gray-800">
+          <option value="macho">Macho</option>
+          <option value="hembra">Hembra</option>
         </select>
       </div>
 
       <div>
-        <label class="block font-semibold text-gray-700">Tamaño</label>
-        <select id="tamano" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-pink-400">
-          <option value="pequeño">Pequeño 🐾</option>
-          <option value="mediano">Mediano 🦴</option>
-          <option value="grande">Grande 🐕</option>
+        <label for="tamano" class="text-dynamic text-gray-800">Tamaño</label>
+        <select id="tamano" class="border rounded-md p-2 w-full text-card text-gray-800">
+          <option value="pequeño">Pequeño</option>
+          <option value="mediano">Mediano</option>
+          <option value="grande">Grande</option>
         </select>
       </div>
-
-      <button id="generar" class="w-full bg-pink-500 text-white py-2 rounded-lg mt-4 hover:bg-pink-600 hover:scale-105 transition transform">
-        Generar nombre
-      </button>
-
-
-      <div id="resultado" class="text-xl font-semibold text-gray-800 mt-6 opacity-0 translate-y-4"></div>
-
     </div>
+
+    <!-- Botones -->
+    <div class="mt-6 flex justify-center gap-3">
+      <button id="generar" class="bg-pink-500 hover:bg-pink-600 text-white p-3 rounded-lg transition" title="Generar nombre">
+        <i data-lucide="sparkles" class="w-5 h-5"></i>
+      </button>
+      <button id="sugerir" class="bg-purple-500 hover:bg-purple-600 text-white p-3 rounded-lg transition" title="Sugerir otro">
+        <i data-lucide="refresh-cw" class="w-5 h-5"></i>
+      </button>
+      <button id="copiar" class="bg-blue-500 hover:bg-blue-600 text-white p-3 rounded-lg transition" title="Copiar nombre">
+        <i data-lucide="copy" class="w-5 h-5"></i>
+      </button>
+      <button id="reset" class="bg-gray-400 hover:bg-gray-500 text-white p-3 rounded-lg transition" title="Reiniciar">
+        <i data-lucide="rotate-ccw" class="w-5 h-5"></i>
+      </button>
+    </div>
+
+    <div id="resultado" class="mt-6 text-lg text-dynamic text-gray-800 opacity-0 translate-y-4 transition-all duration-500"></div>
+
+    <h2 class="text-dynamic text-gray-800 mt-6 font-semibold">Historial de nombres:</h2>
+    <ul id="historial" class="mt-2 text-dynamic text-gray-800 space-y-1"></ul>
+
+    <footer class="mt-6 text-dynamic text-gray-800 text-sm">
+      Hecho con 💕 por TinyRen
+    </footer>
   </div>
 
-  <footer class="mt-6 text-sm text-gray-600">
-    Hecho con 💕 por TinyRen
-  </footer>
-
   <script>
-  const nombres = {
-    perro: {
-      macho: ["Rocky", "Toby", "Max", "Bruno", "Coco", "Simón"],
-      hembra: ["Luna", "Nina", "Kira", "Moka", "Lola", "Canela"]
-    },
-    gato: {
-      macho: ["Tom", "Simba", "Milo", "Leo", "Felix", "Chester"],
-      hembra: ["Nala", "Misha", "Cleo", "Sasha", "Luli", "Mimi"]
-    },
-    conejo: {
-      macho: ["Bugs", "Copito", "Fluffy", "Snow", "Pelusa"],
-      hembra: ["Daisy", "Clover", "Miel", "Luna", "Poppy"]
+    const nombres = {
+      perro: { macho: ["Rocky","Toby","Max","Bruno","Coco","Simón"], hembra: ["Luna","Nina","Kira","Moka","Lola","Canela"] },
+      gato: { macho: ["Tom","Simba","Milo","Leo","Felix","Chester"], hembra: ["Nala","Misha","Cleo","Sasha","Luli","Mimi"] },
+      conejo: { macho: ["Bugs","Copito","Fluffy","Snow","Pelusa"], hembra: ["Daisy","Clover","Miel","Luna","Poppy"] }
+    };
+
+    const especieSelect = document.getElementById("especie");
+    const generoSelect = document.getElementById("genero");
+    const tamanoSelect = document.getElementById("tamano");
+    const resultado = document.getElementById("resultado");
+    const boton = document.getElementById("generar");
+    const sugerirBtn = document.getElementById("sugerir");
+    const copiarBtn = document.getElementById("copiar");
+    const resetBtn = document.getElementById("reset");
+    const historialUL = document.getElementById("historial");
+    const toggleDark = document.getElementById("toggleDark");
+    const iconLuna = document.getElementById("iconLuna");
+    const iconSol = document.getElementById("iconSol");
+    const body = document.getElementById("body");
+    const card = document.getElementById("card");
+
+    let darkMode = false;
+    let historial = [];
+
+    function generarNombre(){
+      const especie = especieSelect.value;
+      const genero = generoSelect.value;
+      const tamano = tamanoSelect.value;
+
+      const lista = nombres[especie][genero];
+      const nombre = lista[Math.floor(Math.random() * lista.length)];
+      const emoji = especie === "perro" ? "🐶" : especie === "gato" ? "🐱" : "🐰";
+
+      resultado.innerHTML = `✨ Tu ${especie} ${tamano} podría llamarse <span class="text-pink-600 font-bold">${nombre}</span> ${emoji} 💖`;
+      resultado.classList.remove("opacity-0","translate-y-4");
+      resultado.classList.add("opacity-100","translate-y-0");
+
+      historial.unshift(nombre);
+      if(historial.length > 5) historial.pop();
+      actualizarHistorial();
     }
-  };
 
-  const especieSelect = document.getElementById("especie");
-  const generoSelect = document.getElementById("genero");
-  const tamanoSelect = document.getElementById("tamano");
-  const resultado = document.getElementById("resultado");
-  const boton = document.getElementById("generar");
+    function actualizarHistorial(){
+      historialUL.innerHTML = "";
+      historial.forEach(n => {
+        const li = document.createElement("li");
+        li.textContent = n;
+        historialUL.appendChild(li);
+      });
+    }
 
-  boton.addEventListener("click", () => {
-    const especie = especieSelect.value;
-    const genero = generoSelect.value;
-    const tamano = tamanoSelect.value;
+    boton.addEventListener("click", generarNombre);
+    sugerirBtn.addEventListener("click", generarNombre);
 
-    const lista = nombres[especie][genero];
-    const nombre = lista[Math.floor(Math.random() * lista.length)];
+    copiarBtn.addEventListener("click", () => {
+      const span = resultado.querySelector("span");
+      if(span){
+        navigator.clipboard.writeText(span.textContent);
+        alert(`¡Nombre "${span.textContent}" copiado!`);
+      }
+    });
 
-    // Agregar animación de aparición
-    resultado.classList.remove("opacity-0", "translate-y-4");
-    resultado.innerHTML = `✨ Tu ${especie} ${tamano} podría llamarse <span class="text-pink-600 font-bold">${nombre}</span> 💖`;
-    resultado.classList.add("opacity-0", "translate-y-4"); // Reinicia animación
+    resetBtn.addEventListener("click", () => {
+      resultado.textContent = "";
+      historial = [];
+      actualizarHistorial();
+    });
 
-    setTimeout(() => {
-      resultado.classList.remove("opacity-0", "translate-y-4");
-      resultado.classList.add("transition-all", "duration-500", "opacity-100", "translate-y-0");
-    }, 50);
-  });
-</script>
+    toggleDark.addEventListener("click", () => {
+        darkMode = !darkMode;
+        if (darkMode) {
+            // Fondo oscuro
+            body.classList.replace("bg-gradient-to-br", "bg-gray-900");
+            card.classList.replace("bg-white", "bg-gray-800");
+            document.querySelectorAll(".text-dynamic, .text-card").forEach(el => {
+            el.classList.replace("text-gray-800", "text-gray-200");
+            });
+            iconLuna.classList.add("hidden");
+            iconSol.classList.remove("hidden");
+        } else {
+            // Fondo claro
+            body.classList.replace("bg-gray-900", "bg-gradient-to-br");
+            card.classList.replace("bg-gray-800", "bg-white");
+            document.querySelectorAll(".text-dynamic, .text-card").forEach(el => {
+            el.classList.replace("text-gray-200", "text-gray-800");
+            });
+            iconSol.classList.add("hidden");
+            iconLuna.classList.remove("hidden");
+        }
+
+        // Actualizar los íconos después del cambio
+        lucide.createIcons();
+
+        // Ajustar selects
+        document.querySelectorAll("select").forEach(sel => {
+            if (darkMode) {
+            sel.style.backgroundColor = "#374151";
+            sel.style.color = "#E5E7EB";
+            sel.style.borderColor = "#6B7280";
+            } else {
+            sel.style.backgroundColor = "white";
+            sel.style.color = "#1F2937";
+            sel.style.borderColor = "#D1D5DB";
+            }
+        });
+        });
 
 
+    lucide.createIcons();
+  </script>
 </body>
 </html>
